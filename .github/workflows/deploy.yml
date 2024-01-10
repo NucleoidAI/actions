@@ -1,0 +1,52 @@
+name: Deploy
+on:
+  workflow_call:
+    inputs:
+      image-and-tag:
+        required: true
+        type: string
+      container-app-name:
+        required: true
+        type: string
+jobs:  
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: canmingir
+          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: canmingir/${{ inputs.image-and-tag }}
+          context: .
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - uses: azure/container-apps-deploy-action@v2
+        with:
+          registryUsername: canmingir
+          registryUrl: registry.hub.docker.com
+          registryPassword: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+          containerAppName: ${{ inputs.container-app-name }}
+          resourceGroup: NucGroup
+          imageToDeploy: registry.hub.docker.com/canmingir/${{ inputs.image-and-tag }}
