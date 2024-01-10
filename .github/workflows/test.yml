@@ -1,0 +1,49 @@
+name: test
+on:
+  workflow_call:
+
+jobs:
+  test-selector:
+    runs-on: ubuntu-latest
+    outputs:
+      topics: ${{ steps.get_topics.outputs.topics }}
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v2
+
+      - id: get_topics
+        name: Get repo topics
+        run: |
+          TOKEN=${{ secrets.GITHUB_TOKEN }}
+          REPO=${{ github.repository }}
+          RESPONSE=$(curl -s -H "Accept: application/vnd.github.mercy-preview+json" -H "Authorization: token $TOKEN" https://api.github.com/repos/$REPO/topics)
+          TOPICS=$(echo $RESPONSE | jq -r '.names[]' | tr '\n' ',')
+          echo "Repo topics are $TOPICS"
+          echo "::set-output name=topics::$TOPICS"
+
+  react-test:
+    needs: test-selector
+    runs-on: ubuntu-latest
+    if: contains(needs.test-selector.outputs.topics, 'react')
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: "https://registry.npmjs.org"
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - uses: cypress-io/github-action@v6
+        with:
+          start: npm run dev
+          browser: chrome
+
+  node-test:
+    needs: test-selector
+    runs-on: ubuntu-latest
+    if: contains(needs.test-selector.outputs.topics, 'node')
+    steps:
+      - name: Run tests
+        run: |
+          echo "Node TEST"
