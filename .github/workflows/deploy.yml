@@ -1,4 +1,4 @@
-name: Deploy
+name: Build and Deploy
 on:
   workflow_call:
 
@@ -38,17 +38,29 @@ jobs:
             exit 1
           fi
 
+      - name: Get repo topics
+        id: get_topics
+        run: |
+          TOKEN=${{ secrets.GITHUB_TOKEN }}
+          REPO=${{ github.repository }}
+          RESPONSE=$(curl -s -H "Accept: application/vnd.github.mercy-preview+json" -H "Authorization: token $TOKEN" https://api.github.com/repos/$REPO/topics)
+          TOPICS=$(echo $RESPONSE | jq -r '.names[]' | tr '\n' ',')
+          echo "Repo topics are $TOPICS"
+          echo "::set-output name=topics::$TOPICS"  
+
+      - name: Print Repo Info
+        run: |
+          echo "Repo: ${{ steps.repo.outputs.repo }}"
+          echo "Container: ${{ steps.container.outputs.container }}"
+          echo "Tag: ${{ steps.tag.outputs.tag }}" 
+          echo "Topics: ${{ steps.get_topics.outputs.topics }}"           
+
       - name: Install Dependencies
         run: npm ci
 
       - name: Build
+        if: contains(steps.get_topics.outputs.topics, 'react')
         run: npm run build
-
-      - name: Print Names
-        run: |
-          echo "Repo: ${{ steps.repo.outputs.repo }}"
-          echo "Container: ${{ steps.container.outputs.container }}"
-          echo "Tag: ${{ steps.tag.outputs.tag }}"  
 
       - name: Log in to Docker Hub
         env:
