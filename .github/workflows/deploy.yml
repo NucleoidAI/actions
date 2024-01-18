@@ -20,7 +20,7 @@ jobs:
       - name: Set container name
         id: container
         run: |
-          if [[ "${{ github.workflow }}" == "Land" ]]; then
+          if [[ "${{ github.workflow }}" =~ ^(land|Land)$ ]]; then            
             echo "::set-output name=container::$(echo ${{ steps.repo.outputs.repo }} | cut -d'/' -f2 | tr '.' '-')-land"
           else
             echo "::set-output name=container::$(echo ${{ steps.repo.outputs.repo }} | cut -d'/' -f2 | tr '.' '-')"
@@ -29,10 +29,10 @@ jobs:
       - name: Set image tag
         id: tag
         run: |
-          if [[ "${{ github.workflow  }}" == "Land" ]]; then
-            echo "::set-output name=tag::land"
-          elif [[ "${{ github.workflow }}" == "Deploy" ]]; then
-            echo "::set-output name=tag::latest"
+          if [[ "${{ github.workflow }}" =~ ^(land|Land)$ ]]; then            
+          echo "::set-output name=tag::land"
+          elif [[ "${{ github.workflow }}" =~ ^(deploy|Deploy)$ ]]; then
+          echo "::set-output name=tag::latest"
           else
             echo "Invalid deployTo value"
             exit 1
