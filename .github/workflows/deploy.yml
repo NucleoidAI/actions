@@ -15,7 +15,7 @@ jobs:
       - name: Set repo name
         id: repo
         run: |
-         echo "::set-output name=repo::$(echo ${{ github.repository }} | cut -d'/' -f2)"
+         echo "::set-output name=repo::$(echo ${{ github.repository }} | cut -d'/' -f2 | tr '[:upper:]' '[:lower:]')"
 
       - name: Set container name
         id: container
