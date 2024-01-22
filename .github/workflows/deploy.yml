@@ -33,9 +33,9 @@ jobs:
         id: tag
         run: |
           if [[ "${{ github.workflow }}" =~ ^(land|Land)$ ]]; then            
-          echo "::set-output name=tag::land@${{ github.run_id }}"
+          echo "::set-output name=tag::land-${{ github.run_id }}"
           elif [[ "${{ github.workflow }}" =~ ^(deploy|Deploy)$ ]]; then
-          echo "::set-output name=tag::latest@${{ github.run_id }}"
+          echo "::set-output name=tag::latest-${{ github.run_id }}"
           else
             echo "Invalid workflow name for use this workflow. Please use either land or deploy as workflow name"
             exit 1
