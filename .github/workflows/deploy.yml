@@ -24,6 +24,9 @@ jobs:
             echo "::set-output name=container::$(echo ${{ steps.repo.outputs.repo }} | cut -d'/' -f2 | tr '.' '-')-land"
           else
             echo "::set-output name=container::$(echo ${{ steps.repo.outputs.repo }} | cut -d'/' -f2 | tr '.' '-')"
+          else
+            echo "Invalid workflow name for use this workflow. Please use either land or deploy as workflow name"
+            exit 1
           fi
 
       - name: Set image tag
@@ -34,7 +37,7 @@ jobs:
           elif [[ "${{ github.workflow }}" =~ ^(deploy|Deploy)$ ]]; then
           echo "::set-output name=tag::latest@${{ github.run_id }}"
           else
-            echo "Invalid deployTo value"
+            echo "Invalid workflow name for use this workflow. Please use either land or deploy as workflow name"
             exit 1
           fi
 
