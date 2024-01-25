@@ -93,6 +93,5 @@ jobs:
           containerAppName: ${{env.CONTAINER}}
           resourceGroup: NucGroup
           imageToDeploy: registry.hub.docker.com/canmingir/${{env.REPO}}:${{env.TAG}}
-          yamlConfigPath: ${{ github.workspace }}/AcrConfig.yaml
         
 
