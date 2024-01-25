@@ -1,0 +1,9 @@
+    ingress:
+      external: true
+      allowInsecure: false
+      targetPort: 8080
+  template:
+    scale:
+      maxReplicas: 10
+      minReplicas: null
+      rules: null
