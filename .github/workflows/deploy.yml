@@ -20,24 +20,24 @@ jobs:
       - name: Set container name
         id: container
         run: |
-          if [[ "${{ github.workflow }}" =~ ^(land|Land)$ ]]; then            
-            echo "::set-output name=container::$(echo ${{ steps.repo.outputs.repo }} | cut -d'/' -f2 | tr '.' '-')-land"
-          elif [[ "${{ github.workflow }}" =~ ^(deploy|Deploy)$ ]]; then
+          if [[ "${{ github.workflow }}" == "Land" ]]; then
+            echo "CONTAINER=$(echo $REPO | cut -d'/' -f2 | tr '.' '-')-land" >> $GITHUB_ENV
+          elif [[ "${{ github.workflow }}" == "Deploy" ]]; then
             echo "CONTAINER=$(echo $REPO | cut -d'/' -f2 | tr '.' '-')" >> $GITHUB_ENV
           else
-            echo "Invalid workflow name for use this workflow. Please use either land or deploy as workflow name"
+            echo "Invalid workflow name for use this workflow. Please use either "Land" or "Deploy" as workflow name"
             exit 1
           fi
 
       - name: Set image tag
         id: tag
         run: |
-          echo "::set-output name=tag::land-${{ github.run_id }}"
-          echo "::set-output name=tag::latest-${{ github.run_id }}"
           if [[ "${{ github.workflow }}" == "Land" ]]; then
+             echo "TAG=land-${{ github.run_id }}" >> $GITHUB_ENV
           elif [[ "${{ github.workflow }}" == "Deploy" ]]; then
+             echo "TAG=latest-${{ github.run_id }}" >> $GITHUB_ENV
           else
-            echo "Invalid workflow name for use this workflow. Please use either land or deploy as workflow name"
+            echo "Invalid workflow name for use this workflow. Please use either "Land" or "Deploy" as workflow name"
             exit 1
           fi
 
