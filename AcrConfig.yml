@@ -1,3 +1,4 @@
+location: eastus
     ingress:
       external: true
       allowInsecure: false
@@ -5,5 +6,5 @@
   template:
     scale:
       maxReplicas: 10
-      minReplicas: null
+      minReplicas: 1
       rules: null
