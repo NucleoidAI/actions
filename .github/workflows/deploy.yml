@@ -62,7 +62,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        if: contains(steps.get_topics.outputs.topics, 'react')
+        if: contains(env.TOPICS, 'react')
         run: npm run build
 
       - name: Log in to Docker Hub
@@ -77,7 +77,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: canmingir/${{ steps.repo.outputs.repo }}:${{ steps.tag.outputs.tag }}
+          tags: canmingir/$REPO:$TAG
           context: .
 
       - name: Azure Login
@@ -90,7 +90,7 @@ jobs:
           registryUsername: canmingir
           registryUrl: registry.hub.docker.com
           registryPassword: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-          containerAppName: ${{ steps.container.outputs.container }}
+          containerAppName: $CONTAINER
           resourceGroup: NucGroup
-          imageToDeploy: registry.hub.docker.com/canmingir/${{ steps.repo.outputs.repo }}:${{ steps.tag.outputs.tag }}
+          imageToDeploy: registry.hub.docker.com/canmingir/$REPO:$TAG
 
