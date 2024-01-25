@@ -23,7 +23,7 @@ jobs:
           if [[ "${{ github.workflow }}" == "Land" ]]; then
             echo "CONTAINER=$(echo $REPO | cut -d'/' -f2 | tr '.' '-')-land" >> $GITHUB_ENV
           elif [[ "${{ github.workflow }}" == "Deploy" ]]; then
-            echo "CONTAINER=$(echo $REPO | cut -d'/' -f2 | tr '.' '-')" >> $GITHUB_ENV
+            echo "CONTAINER=$(echo $REPO | cut -d'/' -f2 | tr '.' '-')-live" >> $GITHUB_ENV
           else
             echo "Invalid workflow name for use this workflow. Please use either "Land" or "Deploy" as workflow name"
             exit 1
