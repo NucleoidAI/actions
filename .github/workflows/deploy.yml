@@ -63,7 +63,12 @@ jobs:
           echo "Repo: $REPO"
           echo "Container: $CONTAINER"
           echo "Tag: $TAG" 
-          echo "Topics: $TOPICS"       
+          echo "Topics: $TOPICS"
+          echo "Branch: $BRANCH"
+
+      - name: Update version.json
+        run: |
+          echo "{ \"version\": \"$BRANCH\" }" > ./src/version.json          
 
       - name: Install Dependencies
         run: npm ci
