@@ -45,6 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     if: contains(needs.test-selector.outputs.topics, 'node')
     steps:
+      - name: Run lint
+        run: npm run lint
       - name: Run tests
-        run: |
-          echo "Node TEST"
+        run: npm test
