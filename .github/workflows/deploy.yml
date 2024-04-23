@@ -68,7 +68,7 @@ jobs:
 
       - name: Set config file
         run: |
-          if [[ "${{ github.workflow }}" == "land" ]]; then
+          if [[ "${{ github.workflow }}" == "Land" ]]; then
             cp config.land config
           elif [[ "${{ github.workflow }}" == "Deploy" ]]; then
             cp config.live config
