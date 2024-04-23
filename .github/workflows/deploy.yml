@@ -66,6 +66,14 @@ jobs:
           echo "Topics: $TOPICS"
           echo "Branch: $BRANCH"
 
+      - name: Set config file
+        run: |
+          if [[ "${{ github.workflow }}" == "Land" ]]; then
+            cp src/config.land.js src/config.js
+          elif [[ "${{ github.workflow }}" == "Deploy" ]]; then
+            cp src/config.live.js src/config.js
+          fi
+
       - name: Update version.json
         run: |
           echo "{ \"version\": \"$BRANCH\" }" > ./src/version.json
