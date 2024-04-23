@@ -56,7 +56,7 @@ jobs:
         run: |
           BRANCH=$(echo ${{ github.ref }} | cut -d'/' -f3)
           echo "Branch is $BRANCH"
-          echo "BRANCH=$BRANCH" >> $GITHUB_ENV    
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
 
       - name: Print Repo Info
         run: |
@@ -66,9 +66,17 @@ jobs:
           echo "Topics: $TOPICS"
           echo "Branch: $BRANCH"
 
+      - name: Set config file
+        run: |
+          if [[ "${{ github.workflow }}" == "land" ]]; then
+            cp config.land config
+          elif [[ "${{ github.workflow }}" == "Deploy" ]]; then
+            cp config.live config
+          fi
+
       - name: Update version.json
         run: |
-          echo "{ \"version\": \"$BRANCH\" }" > ./src/version.json          
+          echo "{ \"version\": \"$BRANCH\" }" > ./src/version.json
 
       - name: Install Dependencies
         run: npm ci
