@@ -67,6 +67,7 @@ jobs:
           echo "Branch: $BRANCH"
 
       - name: Set config file
+        if: ${{!contains(env.TOPICS, 'website')}}
         run: |
           if [[ "${{ github.workflow }}" == "Land" ]]; then
             cp config.land.js config.js
