@@ -83,7 +83,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        if: contains(env.TOPICS, 'react')
+        if: ${{!contains(env.TOPICS, 'node')}}
         run: npm run build
 
       - name: Log in to Docker Hub
