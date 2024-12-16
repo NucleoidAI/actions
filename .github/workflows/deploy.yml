@@ -76,6 +76,7 @@ jobs:
           fi
 
       - name: Update version.json
+        if: ${{!contains(env.TOPICS, 'website')}}
         run: |
           echo "{ \"version\": \"$BRANCH\" }" > ./src/version.json
 
