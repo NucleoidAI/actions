@@ -99,19 +99,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: canmingir/${{env.REPO}}:${{env.TAG}}
+          tags: |
+            canmingir/${{env.REPO}}:latest
+            canmingir/${{env.REPO}}:${{env.TAG}}
           context: .
-
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - uses: azure/container-apps-deploy-action@v2
-        with:
-          registryUsername: canmingir
-          registryUrl: registry.hub.docker.com
-          registryPassword: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-          containerAppName: ${{env.CONTAINER}}
-          resourceGroup: NucGroup
-          imageToDeploy: registry.hub.docker.com/canmingir/${{env.REPO}}:${{env.TAG}}
